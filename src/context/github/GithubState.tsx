@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import axios from "axios";
 import GithubReducer from "./GithubReducer";
 import GithubContext from "./GithubContext";
@@ -56,6 +56,22 @@ function GithubState({ children }: { children: React.ReactNode }) {
   };
 
   //Get Users
+  const fetchUsers = async () => {
+    try {
+      setIsLoadingUsers(true);
+      const { data } = await axios.get(
+        `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+      );
+      console.log("data", data);
+      dispatch({
+        type: GET_USERS,
+        payload: data,
+      });
+    } catch (error) {
+      setIsLoadingUsers(false);
+      return;
+    }
+  };
 
   //Get Repos
   const getUserRepos = async (username: string) => {
@@ -103,6 +119,7 @@ function GithubState({ children }: { children: React.ReactNode }) {
         clearUsers,
         getUser,
         getUserRepos,
+        fetchUsers,
       }}
     >
       {children}

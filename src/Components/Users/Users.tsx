@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import UserItem from "./UserItem";
 import Spinner from "../layout/Spinner";
 import GithubContext from "../../context/github/GithubContext";
@@ -20,30 +20,33 @@ interface UsersProps {
 }
 
 function Users() {
-  const githubContext: any = useContext(GithubContext);
+  const { isLoading, users, fetchUsers }: any = useContext(GithubContext);
 
-  const { isLoading, users } = githubContext;
+  useEffect(() => {
+    fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) {
     return <Spinner />;
   }
 
-  // if (users.length === 0) {
-  //   return (
-  //     <div>
-  //       <p
-  //         style={{
-  //           color: "red",
-  //           display: "flex",
-  //           justifyContent: "center",
-  //           padding: 20,
-  //         }}
-  //       >
-  //         List is empty, please enter something!
-  //       </p>
-  //     </div>
-  //   );
-  // }
+  if (users.length === 0) {
+    return (
+      <div>
+        <p
+          style={{
+            color: "red",
+            display: "flex",
+            justifyContent: "center",
+            padding: 20,
+          }}
+        >
+          List is empty, please enter something!
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="user-style">

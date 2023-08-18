@@ -16,7 +16,12 @@ const state = (state: any, action: any) => {
         users: action.payload,
         loadingUsers: false,
       };
-
+    case GET_USERS:
+      return {
+        ...state,
+        users: action.payload,
+        loadingUser: false,
+      };
     case GET_USER:
       return {
         ...state,
