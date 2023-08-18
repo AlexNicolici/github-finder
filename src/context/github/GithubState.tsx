@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer } from "react";
 import axios from "axios";
 import GithubReducer from "./GithubReducer";
 import GithubContext from "./GithubContext";
