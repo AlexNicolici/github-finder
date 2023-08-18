@@ -1,19 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
+import AlertContext from "../../context/alert/AlertContext";
 
-function Alert({
-  type,
-  msg,
-}: {
-  type?: "primary" | "light" | "dark" | "danger" | "success";
-  msg?: string;
-}) {
-  if (!type || !msg) {
+function Alert() {
+  const alertContext: any = useContext(AlertContext);
+
+  const { alert } = alertContext;
+
+  if ((!alert && !alert?.type) || !alert?.msg) {
     return null;
   }
 
   return (
-    <div className={`alert alert-${type}`}>
-      <i className="fas fa-info-circle"></i> {msg}
+    <div className={`alert alert-${alert.type}`}>
+      <i className="fas fa-info-circle"></i> {alert.msg}
     </div>
   );
 }

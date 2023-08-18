@@ -1,63 +1,35 @@
-import React, { useState, useEffect, Fragment } from "react";
-import axios from "axios";
+import React, { useEffect, Fragment, useContext } from "react";
+
 import { Link, useParams } from "react-router-dom";
 import Spinner from "../Components/layout/Spinner";
 import Repos from "../Components/repos/Repos";
+import GithubContext from "../context/github/GithubContext";
 
 function User() {
-  const [user, setUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [userRepos, setUserRepos] = useState(null);
-
   const params = useParams();
 
   const username = params.login;
 
-  //Get single Github user
-  const getUser = async (username: string) => {
-    try {
-      setIsLoading(true);
-      const { data } = await axios.get(
-        `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-      );
-      setUser(data);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      setUser(null);
-      return;
-    }
-  };
+  const { getUser, user, repos, loadingUser, getUserRepos }: any =
+    useContext(GithubContext);
 
   // GET USER REPOS
-  const getUserRepos = async (username: string) => {
-    try {
-      setIsLoading(true);
-      const { data } = await axios.get(
-        `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-      );
-      setUserRepos(data);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      setUser(null);
-      return;
-    }
-  };
 
   useEffect(() => {
     if (username) {
       getUser(username);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   useEffect(() => {
     if (username) {
       getUserRepos(username);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
-  if (isLoading) {
+  if (loadingUser) {
     return <Spinner />;
   }
 
@@ -180,7 +152,7 @@ function User() {
         </div>
       </div>
 
-      <Repos repos={userRepos} />
+      <Repos repos={repos} />
     </div>
   );
 }

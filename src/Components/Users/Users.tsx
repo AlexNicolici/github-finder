@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import UserItem from "./UserItem";
 import Spinner from "../layout/Spinner";
+import GithubContext from "../../context/github/GithubContext";
 
 interface UsersProps {
   id: string;
@@ -18,30 +19,35 @@ interface UsersProps {
   hireable: boolean;
 }
 
-function Users({
-  isLoading,
-  users = [],
-}: {
-  isLoading?: boolean;
-  users?: UsersProps[];
-}) {
+function Users() {
+  const githubContext: any = useContext(GithubContext);
+
+  const { isLoading, users } = githubContext;
+
   if (isLoading) {
     return <Spinner />;
   }
 
-  if (users.length === 0) {
-    return (
-      <div>
-        <p style={{ display: "flex", justifyContent: "center", padding: 50 }}>
-          List is empty!
-        </p>
-      </div>
-    );
-  }
+  // if (users.length === 0) {
+  //   return (
+  //     <div>
+  //       <p
+  //         style={{
+  //           color: "red",
+  //           display: "flex",
+  //           justifyContent: "center",
+  //           padding: 20,
+  //         }}
+  //       >
+  //         List is empty, please enter something!
+  //       </p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="user-style">
-      {users.map((user) => {
+      {users.map((user: any) => {
         return <UserItem key={user.id} user={user} />;
       })}
     </div>
